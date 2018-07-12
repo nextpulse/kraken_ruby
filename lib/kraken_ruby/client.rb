@@ -144,8 +144,11 @@ module Kraken
 
         url = @base_uri + url_path(method)
         r = self.class.post(url, { headers: headers, body: post_data }).parsed_response
-        #r['error'].empty? ? r['result'] : r['error']
-        r 
+        if !r['error'].empty? 
+          #TODO should really use some API error class
+          raise StandardError.new(r['error'])
+        end
+        r['result'] 
       end
 
       # Generate a 64-bit nonce where the 48 high bits come directly from the current
